@@ -1,0 +1,37 @@
+// ==UserScript==
+// @name         115浏览器网盘 del快捷键删除文件功能
+// @namespace    
+// @version      2024-08-03
+// @description  给115浏览器网盘增加快捷键功能。期待官方做的更好!
+// @author       You
+// @match        https://115.com/?cid=*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=115.com
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    setTimeout( function(){//延时
+     var iframe,iframeDoc,addjsto;
+        iframe = document.querySelector("iframe[name='wangpan']");
+        iframeDoc = iframe.contentDocument;
+		if (iframe) {
+             var addjsscript = document.createElement("script");
+			addjsscript.textContent ="function getCheckedValues() {"+
+			"var values = []; "+
+			"var checkboxes = document.querySelectorAll('input[type=\"checkbox\"]:checked');"+
+			"checkboxes.forEach(function(checkbox) {values.push(checkbox.value);}); "+
+			"values.shift(); return values;"+
+			"};"+
+			"document.addEventListener('keydown', function(event) { "+
+			"var inurlfg=window.location.search.split('cid=');inurlfg=inurlfg[1].split('&');inurlfg=inurlfg[0];"+
+			"if (event.key === 'Delete'){" +
+			"var listItems = document.querySelectorAll('#js_operate_box li');var clickEvent = new MouseEvent('click', { 'view': window, 'bubbles': true, 'cancelable': true });  listItems[6].dispatchEvent(clickEvent);"+
+			"} "+
+			"event.preventDefault();"+
+			"});";
+             addjsto = iframeDoc.getElementById('js_data_list');
+             addjsto.appendChild(addjsscript);
+		}
+    }, 3 * 1000 );//网站加载完毕 3秒钟后起作用
+})();
